@@ -1,4 +1,4 @@
-// frontend/src/App.jsx
+// frontend/src/App.jsx (updated with password field)
 import { useState } from 'react';
 
 export default function App() {
@@ -7,8 +7,13 @@ export default function App() {
   const [result, setResult] = useState(null);
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState(null);
+  const [password, setPassword] = useState('');
 
   const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:10000/api';
+
+  const headers = {
+    'x-estimate-password': password,
+  };
 
   const handleUpload = async () => {
     const formData = new FormData();
@@ -18,6 +23,7 @@ export default function App() {
     const res = await fetch(`${apiBase}/upload`, {
       method: 'POST',
       body: formData,
+      headers,
     });
 
     const data = await res.json();
@@ -27,18 +33,30 @@ export default function App() {
   const handleQuery = async () => {
     const res = await fetch(`${apiBase}/query`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ prompt, model }),
     });
 
     const data = await res.json();
-    setResponse(data.response || 'Error');
+    setResponse(data.response || data.error || 'Error');
   };
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
       <h1>EstiMate 🧠💸</h1>
-      <p>Estimate and preview your GPT usage.</p>
+      <p>Estimate and preview your GPT usage. 🔐</p>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <label>Password: </label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
 
       <section style={{ marginBottom: '2rem' }}>
         <h2>🧾 File Cost Estimator</h2>

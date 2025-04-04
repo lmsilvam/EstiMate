@@ -1,0 +1,95 @@
+🔧 1. Prepare Your Repo
+If you haven’t already:
+
+
+git init
+git add .
+git commit -m "Initial EstiMate version"
+gh repo create estimate --public --source=. --remote=origin
+git push -u origin main
+Make sure your repo has:
+
+/backend
+
+/frontend
+
+.env.example files
+
+Clean commit history
+
+☁️ 2. Deploy Backend to Render
+✅ Steps:
+Go to https://dashboard.render.com
+
+Click “New → Web Service”
+
+Connect your GitHub repo
+
+Fill in:
+
+Name: estimate-api
+
+Root Directory: backend
+
+Build Command: npm install
+
+Start Command: node index.mjs
+
+Under Environment Variables, add:
+
+PORT = 10000
+OPENAI_API_KEY = sk-xxxx...
+Click Create Web Service
+
+Render will build and deploy it. Once done, you’ll get a public URL like:
+
+arduino
+Copiar
+Editar
+https://estimate-api.onrender.com
+Copy that — you’ll use it in the frontend next.
+
+⚛️ 3. Deploy Frontend to Vercel
+✅ Steps:
+Go to https://vercel.com
+
+Click “New Project”, import your GitHub repo
+
+When asked:
+
+Framework: React
+
+Root Directory: /frontend
+
+Build Command: npm run build
+
+Output Directory: build
+
+Add Environment Variable:
+
+env
+Copiar
+Editar
+VITE_API_BASE_URL = https://estimate-api.onrender.com/api
+Click Deploy
+
+Done! Vercel will give you something like:
+
+arduino
+Copiar
+Editar
+https://estimate.vercel.app
+🎉 Done! You Now Have:
+Public frontend at: https://estimate.vercel.app
+
+API server at: https://estimate-api.onrender.com/api
+
+Fully functional cost estimator + live GPT querying
+
+🔒 Optional Extras:
+Custom domain (e.g., estimate.tools)
+
+Add password or auth layer to protect usage
+
+Enable Render autoscaling or keep-alive pings (so backend stays warm)
+
